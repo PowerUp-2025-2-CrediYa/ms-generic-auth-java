@@ -28,7 +28,7 @@ public class Handler {
     public Mono<ServerResponse> listenSaveUser(ServerRequest serverRequest) {
         // useCase.logic();
         return serverRequest.bodyToMono(User.class)
-                .flatMap(userUseCase::saveUser)
+                .flatMap(userUseCase::save)
                 .flatMap(savedUser -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(savedUser));

@@ -27,7 +27,8 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
    @Override
-    public Mono<User> save(User user){
+    public Mono<User> saveUser(User user){
+
         return super.save(user);
    }
 
