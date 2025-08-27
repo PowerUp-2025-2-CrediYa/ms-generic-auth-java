@@ -22,3 +22,15 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+
+routes:
+  paths:
+    tasks: "/api/v1/usuarios"
+adapters:
+  r2dbc:
+    host: "172.17.7.189"
+    port: 5432
+    database: "authdb"
+    schema: "auth"
+    username: "root"
+    password: "root"

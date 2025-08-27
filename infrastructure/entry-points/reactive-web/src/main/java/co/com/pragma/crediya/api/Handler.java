@@ -1,6 +1,9 @@
 package co.com.pragma.crediya.api;
 
+import co.com.pragma.crediya.model.user.User;
+import co.com.pragma.crediya.usecase.user.UserUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -9,8 +12,8 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class Handler {
-//private  final UseCase useCase;
-//private  final UseCase2 useCase2;
+
+    private  final UserUseCase userUseCase;
 
     public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
         // useCase.logic();
@@ -22,8 +25,12 @@ public class Handler {
         return ServerResponse.ok().bodyValue("");
     }
 
-    public Mono<ServerResponse> listenPOSTUseCase(ServerRequest serverRequest) {
+    public Mono<ServerResponse> listenSaveUser(ServerRequest serverRequest) {
         // useCase.logic();
-        return ServerResponse.ok().bodyValue("");
+        return serverRequest.bodyToMono(User.class)
+                .flatMap(userUseCase::saveUser)
+                .flatMap(savedUser -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(savedUser));
     }
 }
