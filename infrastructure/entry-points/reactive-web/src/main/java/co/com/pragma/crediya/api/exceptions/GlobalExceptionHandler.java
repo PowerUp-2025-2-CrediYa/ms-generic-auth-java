@@ -1,4 +1,4 @@
-package co.com.pragma.crediya.api.models;
+package co.com.pragma.crediya.api.exceptions;
 
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;

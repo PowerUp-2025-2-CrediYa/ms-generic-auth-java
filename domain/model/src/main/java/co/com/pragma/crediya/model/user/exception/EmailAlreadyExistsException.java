@@ -1,4 +1,4 @@
-package co.com.pragma.crediya.usecase.exception;
+package co.com.pragma.crediya.model.user.exception;
 
 public class EmailAlreadyExistsException extends RuntimeException{
     public EmailAlreadyExistsException(String email) {

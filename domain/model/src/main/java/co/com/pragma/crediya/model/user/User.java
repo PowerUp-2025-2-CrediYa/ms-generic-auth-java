@@ -2,7 +2,6 @@ package co.com.pragma.crediya.model.user;
 
 import lombok.*;
 
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Getter
