@@ -19,7 +19,5 @@ public class User {
     private String phoneNumber;
     private Integer roleId;
     private Double baseSalary;
-    private ZonedDateTime createdAt;
-    private ZonedDateTime updatedAt;
 
 }

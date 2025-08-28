@@ -41,9 +41,4 @@ public class UserEntity {
     @Column("salario_base")
     private Double baseSalary;
 
-    @Column("created_at")
-    private ZonedDateTime createdAt;
-
-    @Column("updated_at")
-    private ZonedDateTime updatedAt;
 }
