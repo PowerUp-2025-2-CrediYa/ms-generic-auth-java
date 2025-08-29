@@ -1,60 +1,69 @@
 package co.com.pragma.crediya.api;
 
+import co.com.pragma.crediya.api.model.request.UserRequest;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Mono;
 
-@ContextConfiguration(classes = {RouterRest.class, Handler.class})
-@WebFluxTest
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class RouterRestTest {
 
-    @Autowired
+    @Mock
+    private Handler handler;
+
+    private RouterFunction<ServerResponse> routerFunction;
+
     private WebTestClient webTestClient;
 
-    @Test
-    void testListenGETUseCase() {
-        webTestClient.get()
-                .uri("/api/usecase/path")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class)
-                .value(userResponse -> {
-                            Assertions.assertThat(userResponse).isEmpty();
-                        }
-                );
+    @BeforeEach
+    void setUp() {
+        // Arrange: configurar el router con el handler mockeado
+        routerFunction = new RouterRest().routerFunction(handler);
+        webTestClient = WebTestClient.bindToRouterFunction(routerFunction).build();
     }
 
     @Test
-    void testListenGETOtherUseCase() {
-        webTestClient.get()
-                .uri("/api/otherusercase/path")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class)
-                .value(userResponse -> {
-                            Assertions.assertThat(userResponse).isEmpty();
-                        }
-                );
-    }
+    void shouldRoutePostToListenSaveUser() {
+        // Arrange: simular respuesta del handler
+        UserRequest userRequest = UserRequest.builder()
+                .firstName("Carlos")
+                .lastName("Ramírez")
+                .email("carlos@example.com")
+                .documentId("123456789")
+                .phoneNumber("+573001234567")
+                .roleId(1)
+                .baseSalary(5000000.0)
+                .build();
 
-    @Test
-    void testListenPOSTUseCase() {
+        ServerResponse mockResponse = ServerResponse.ok().bodyValue("Usuario creado").block();
+        when(handler.listenSaveUser(any())).thenReturn(Mono.just(mockResponse));
+
+        // Act & Assert
         webTestClient.post()
-                .uri("/api/usecase/otherpath")
-                .accept(MediaType.APPLICATION_JSON)
-                .bodyValue("")
+                .uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userRequest)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class)
-                .value(userResponse -> {
-                            Assertions.assertThat(userResponse).isEmpty();
-                        }
-                );
+                .expectBody(String.class).isEqualTo("Usuario creado");
+
+        verify(handler).listenSaveUser(any());
     }
+
+
 }
