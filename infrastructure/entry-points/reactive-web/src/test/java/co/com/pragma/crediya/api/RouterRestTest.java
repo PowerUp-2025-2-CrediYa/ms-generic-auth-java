@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 class RouterRestTest {
 
     @Mock
-    private Handler handler;
+    private UserHandler userHandler;
 
     private RouterFunction<ServerResponse> routerFunction;
 
@@ -29,7 +29,7 @@ class RouterRestTest {
     @BeforeEach
     void setUp() {
         // Arrange: configurar el router con el handler mockeado
-        routerFunction = new RouterRest().routerFunction(handler);
+        routerFunction = new RouterRest().routerFunction(userHandler);
         webTestClient = WebTestClient.bindToRouterFunction(routerFunction).build();
     }
 
@@ -47,7 +47,7 @@ class RouterRestTest {
                 .build();
 
         ServerResponse mockResponse = ServerResponse.ok().bodyValue("Usuario creado").block();
-        when(handler.listenSaveUser(any())).thenReturn(Mono.just(mockResponse));
+        when(userHandler.listenSaveUser(any())).thenReturn(Mono.just(mockResponse));
 
         // Act & Assert
         webTestClient.post()
@@ -58,7 +58,7 @@ class RouterRestTest {
                 .expectStatus().isOk()
                 .expectBody(String.class).isEqualTo("Usuario creado");
 
-        verify(handler).listenSaveUser(any());
+        verify(userHandler).listenSaveUser(any());
     }
 
 

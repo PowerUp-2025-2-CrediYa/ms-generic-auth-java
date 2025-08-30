@@ -1,12 +1,6 @@
 package co.com.pragma.crediya.api;
 
-import co.com.pragma.crediya.api.model.request.UserRequest;
-import co.com.pragma.crediya.api.model.response.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.context.annotation.Bean;
@@ -25,30 +19,26 @@ public class RouterRest {
             @RouterOperation(
                     path = "/api/v1/usuarios",
                     method = RequestMethod.POST,
-                    beanClass = Handler.class,
+                    beanClass = UserHandler.class,
                     beanMethod = "listenSaveUser",
                     operation = @Operation(
-                            summary = "Crear usuario",
-                            description = "Recibe un usuario y lo guarda en el sistema",
-                            requestBody = @RequestBody(
-                                    required = true,
-                                    content = @Content(schema = @Schema(implementation = UserRequest.class))
-                            ),
-                            responses = {
-                                    @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente",
-                                            content = @Content(schema = @Schema(implementation = UserResponse.class))),
-                                    @ApiResponse(responseCode = "400", description = "Datos inválidos"),
-                                    @ApiResponse(responseCode = "422", description = "Violación de reglas de negocio"),
-                                    @ApiResponse(responseCode = "409", description = "Usuario ya existe")
-                            }
+                            summary = "Crear usuario"
                     )
             )
     })
 
-
     @Bean
-    public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(POST("/api/v1/usuarios"), handler::listenSaveUser);
+    public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler) {
+        return route(POST("/api/v1/usuarios"), userHandler::listenSaveUser);
+                //.filter(errorToHttp());
 
     }
+
+   /* private HandlerFilterFunction<ServerResponse, ServerResponse> errorToHttp() {
+        return (request, next) -> next.handle(request)
+                .onErrorMap(EmailAlreadyExistsException.class,
+                        ex -> new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage()))
+                .onErrorMap(DocumentIdAlreadyExistsException.class,
+                        ex -> new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage()));
+    }*/
 }

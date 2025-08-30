@@ -12,9 +12,9 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Users API")
+                        .title("CrediYa Users API")
                         .version("v1")
-                        .description("Documentación de endpoints funcionales para Usuarios "));
+                        .description("Documentación de endpoints para Usuarios "));
     }
 
 

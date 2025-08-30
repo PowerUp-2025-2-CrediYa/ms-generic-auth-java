@@ -1,5 +1,6 @@
 package co.com.pragma.crediya.api.exceptions;
 
+import co.com.pragma.crediya.api.helper.ExceptionHelper;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -16,14 +17,18 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 @Component
+
 public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
 
+    private final ExceptionHelper exceptionHelper;
 
     public GlobalExceptionHandler(ErrorAttributes errorAttributes,
                                   WebProperties resources,
                                   ApplicationContext applicationContext,
-                                  ServerCodecConfigurer configurer) {
+                                  ServerCodecConfigurer configurer,
+                                  ExceptionHelper exceptionHelper) {
         super(errorAttributes, resources.getResources(), applicationContext);
+        this.exceptionHelper = exceptionHelper;
         this.setMessageWriters(configurer.getWriters());
         this.setMessageReaders(configurer.getReaders());
     }
@@ -33,11 +38,14 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
         return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
     }
 
-    private Mono<ServerResponse> renderErrorResponse(ServerRequest request)
-    {
-        Map<String, Object> errorProperties = getErrorAttributes(request, ErrorAttributeOptions.defaults());
+    private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
+        Map<String, Object> errorProperties = getErrorAttributes(
+                request, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.MESSAGE));
 
-        return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        Throwable ex = getError(request);
+        HttpStatus status = exceptionHelper.resolveStatus(ex);
+
+        return ServerResponse.status(status)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(errorProperties));
     }

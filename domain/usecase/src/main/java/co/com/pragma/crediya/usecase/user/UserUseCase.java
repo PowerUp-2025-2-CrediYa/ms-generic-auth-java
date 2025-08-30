@@ -3,6 +3,7 @@ package co.com.pragma.crediya.usecase.user;
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.exception.DocumentIdAlreadyExistsException;
 import co.com.pragma.crediya.model.user.exception.EmailAlreadyExistsException;
+import co.com.pragma.crediya.model.user.exception.InvalidBaseSalaryRangeException;
 import co.com.pragma.crediya.model.user.exception.InvalidUserException;
 import co.com.pragma.crediya.model.user.gateways.UserRepository;
 import co.com.pragma.crediya.model.user.validation.UserValidator;
@@ -18,7 +19,7 @@ public class UserUseCase {
 
         try {
             UserValidator.validate(user);
-        } catch (InvalidUserException e) {
+        } catch (InvalidUserException | InvalidBaseSalaryRangeException e) {
             return Mono.error(e);
         }
 
