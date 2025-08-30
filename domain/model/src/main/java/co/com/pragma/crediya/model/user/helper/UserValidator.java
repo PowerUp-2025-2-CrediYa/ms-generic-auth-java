@@ -1,4 +1,4 @@
-package co.com.pragma.crediya.model.user.validation;
+package co.com.pragma.crediya.model.user.helper;
 
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.exception.InvalidBaseSalaryRangeException;

@@ -4,7 +4,7 @@ import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.exception.DocumentIdAlreadyExistsException;
 import co.com.pragma.crediya.model.user.exception.EmailAlreadyExistsException;
 import co.com.pragma.crediya.model.user.gateways.UserRepository;
-import co.com.pragma.crediya.model.user.validation.UserValidator;
+import co.com.pragma.crediya.model.user.helper.UserValidator;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -22,9 +22,9 @@ public class UserUseCase {
                     userRepositoryGateway.existsByDocumentId(user.getDocumentId())
             ).flatMap(t -> {
                 boolean emailExists = t.getT1();
-                boolean docExists   = t.getT2();
+                boolean docExists = t.getT2();
                 if (emailExists) return Mono.error(new EmailAlreadyExistsException(user.getEmail()));
-                if (docExists)   return Mono.error(new DocumentIdAlreadyExistsException(user.getDocumentId()));
+                if (docExists) return Mono.error(new DocumentIdAlreadyExistsException(user.getDocumentId()));
                 return userRepositoryGateway.saveUser(user);
             });
         });
