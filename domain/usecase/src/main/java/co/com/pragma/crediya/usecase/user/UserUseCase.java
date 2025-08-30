@@ -3,8 +3,6 @@ package co.com.pragma.crediya.usecase.user;
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.exception.DocumentIdAlreadyExistsException;
 import co.com.pragma.crediya.model.user.exception.EmailAlreadyExistsException;
-import co.com.pragma.crediya.model.user.exception.InvalidBaseSalaryRangeException;
-import co.com.pragma.crediya.model.user.exception.InvalidUserException;
 import co.com.pragma.crediya.model.user.gateways.UserRepository;
 import co.com.pragma.crediya.model.user.validation.UserValidator;
 import lombok.RequiredArgsConstructor;
@@ -17,22 +15,20 @@ public class UserUseCase {
 
     public Mono<User> save(User user) {
 
-        try {
+        return Mono.defer(() -> {
             UserValidator.validate(user);
-        } catch (InvalidUserException | InvalidBaseSalaryRangeException e) {
-            return Mono.error(e);
-        }
-
-
-        return userRepositoryGateway.findUserByEmail(user.getEmail())
-                .flatMap(existing -> Mono.<User>error(new EmailAlreadyExistsException(user.getEmail())))
-                .switchIfEmpty(
-                        userRepositoryGateway.findUserByDocumentId(user.getDocumentId())
-                                .flatMap(existing -> Mono.<User>error(new DocumentIdAlreadyExistsException(user.getDocumentId())))
-                                .switchIfEmpty(userRepositoryGateway.saveUser(user))
-                );
+            return Mono.zip(
+                    userRepositoryGateway.existsByEmail(user.getEmail()),
+                    userRepositoryGateway.existsByDocumentId(user.getDocumentId())
+            ).flatMap(t -> {
+                boolean emailExists = t.getT1();
+                boolean docExists   = t.getT2();
+                if (emailExists) return Mono.error(new EmailAlreadyExistsException(user.getEmail()));
+                if (docExists)   return Mono.error(new DocumentIdAlreadyExistsException(user.getDocumentId()));
+                return userRepositoryGateway.saveUser(user);
+            });
+        });
     }
-
 
 }
 

@@ -16,34 +16,28 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         UserEntity,
         UUID,
         UserReactiveRepository
-> implements UserRepository {
+        > implements UserRepository {
     public UserReactiveRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper) {
-        /**
-         *  Could be use mapper.mapBuilder if your domain model implement builder pattern
-         *  super(repository, mapper, d -> mapper.mapBuilder(d,ObjectModel.ObjectModelBuilder.class).build());
-         *  Or using mapper.map with the class of the object model
-         */
         super(repository, mapper, d -> mapper.map(d, User.class));
     }
 
-   @Override
-    public Mono<User> saveUser(User user){
+    @Override
+    public Mono<User> saveUser(User user) {
 
         return super.save(user);
-   }
+    }
 
     @Override
-    public Mono<User> findUserByEmail(String email) {
+    public Mono<Boolean> existsByEmail(String email) {
 
-        return repository.findByEmail(email)
-                .map(super::toEntity);
+        return repository.existsByEmail(email);
 
     }
 
     @Override
-    public Mono<User> findUserByDocumentId(String documentId) {
-        return repository.findUserByDocumentId(documentId)
-                .map(super::toEntity);
+    public Mono<Boolean> existsByDocumentId(String documentId) {
+
+        return repository.existsByDocumentId(documentId);
     }
 
 }

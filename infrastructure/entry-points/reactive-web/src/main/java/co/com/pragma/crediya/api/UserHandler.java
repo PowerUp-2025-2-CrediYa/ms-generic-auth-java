@@ -42,7 +42,6 @@ public class UserHandler {
                     @ApiResponse(responseCode = "400", description = "Datos inválidos",
                             content = @Content(schema = @Schema(implementation = ApiError.class),
                                     examples = @ExampleObject(
-                                            name = "Error de validación",
                                             value = """
                                                     {
                                                       "error": "Bad Request",
@@ -56,7 +55,6 @@ public class UserHandler {
                     @ApiResponse(responseCode = "422", description = "Violación de reglas de negocio",
                             content = @Content(schema = @Schema(implementation = ApiError.class),
                                     examples = @ExampleObject(
-                                            name = "Duplicado",
                                             value = """
                                                     {
                                                       "error": "Bad request.",
@@ -70,7 +68,6 @@ public class UserHandler {
                     @ApiResponse(responseCode = "409", description = "Usuario ya existe",
                             content = @Content(schema = @Schema(implementation = ApiError.class),
                                     examples = @ExampleObject(
-                                            name = "Error de validación",
                                             value = """
                                                     {
                                                       "error": "Conflict",
