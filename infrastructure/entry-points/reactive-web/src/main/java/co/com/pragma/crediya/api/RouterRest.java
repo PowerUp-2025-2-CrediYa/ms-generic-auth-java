@@ -30,15 +30,6 @@ public class RouterRest {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler) {
         return route(POST("/api/v1/usuarios"), userHandler::listenSaveUser);
-                //.filter(errorToHttp());
-
     }
 
-   /* private HandlerFilterFunction<ServerResponse, ServerResponse> errorToHttp() {
-        return (request, next) -> next.handle(request)
-                .onErrorMap(EmailAlreadyExistsException.class,
-                        ex -> new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage()))
-                .onErrorMap(DocumentIdAlreadyExistsException.class,
-                        ex -> new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage()));
-    }*/
 }

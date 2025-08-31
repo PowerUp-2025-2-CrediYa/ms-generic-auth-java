@@ -1,10 +1,7 @@
 package co.com.pragma.crediya.api.helper;
 
 
-import co.com.pragma.crediya.model.user.exception.DocumentIdAlreadyExistsException;
-import co.com.pragma.crediya.model.user.exception.EmailAlreadyExistsException;
-import co.com.pragma.crediya.model.user.exception.InvalidBaseSalaryRangeException;
-import co.com.pragma.crediya.model.user.exception.InvalidUserException;
+import co.com.pragma.crediya.model.user.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +9,14 @@ import org.springframework.stereotype.Component;
 public class ExceptionHelper {
 
     public HttpStatus resolveStatus(Throwable ex) {
+
         if (ex instanceof org.springframework.web.server.ResponseStatusException rse) {
             return HttpStatus.valueOf(rse.getStatusCode().value());
         }
-        if (ex instanceof EmailAlreadyExistsException || ex instanceof DocumentIdAlreadyExistsException) {
+        if (ex instanceof EmailAlreadyExistsException
+                || ex instanceof DocumentIdAlreadyExistsException
+                || ex instanceof RoleNotExistsException
+        ) {
             return HttpStatus.CONFLICT;
         }
         if (ex instanceof InvalidBaseSalaryRangeException) {

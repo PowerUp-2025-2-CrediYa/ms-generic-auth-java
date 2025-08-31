@@ -14,7 +14,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("CrediYa Users API")
                         .version("v1")
-                        .description("Documentación de endpoints para Usuarios "));
+                        .description("Documentación de endpoints funcionales para Usuarios"));
     }
 
 
