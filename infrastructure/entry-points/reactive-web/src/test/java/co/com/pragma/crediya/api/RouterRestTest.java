@@ -28,20 +28,20 @@ class RouterRestTest {
 
     @BeforeEach
     void setUp() {
-        // Arrange: configurar el router con el handler mockeado
+
         routerFunction = new RouterRest().routerFunction(userHandler);
         webTestClient = WebTestClient.bindToRouterFunction(routerFunction).build();
     }
 
     @Test
     void shouldRoutePostToListenSaveUser() {
-        // Arrange: simular respuesta del handler
+
         UserRequest userRequest = UserRequest.builder()
-                .firstName("Carlos")
-                .lastName("Ramírez")
-                .email("carlos@example.com")
+                .firstName("Jon")
+                .lastName("Doe")
+                .email("ok@dom.com")
                 .documentId("123456789")
-                .phoneNumber("+573001234567")
+                .phoneNumber("+1234568910")
                 .roleId(1)
                 .baseSalary(5000000.0)
                 .build();
@@ -49,7 +49,6 @@ class RouterRestTest {
         ServerResponse mockResponse = ServerResponse.ok().bodyValue("Usuario creado").block();
         when(userHandler.listenSaveUser(any())).thenReturn(Mono.just(mockResponse));
 
-        // Act & Assert
         webTestClient.post()
                 .uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -59,7 +58,6 @@ class RouterRestTest {
                 .expectBody(String.class).isEqualTo("Usuario creado");
 
         verify(userHandler).listenSaveUser(any());
+
     }
-
-
 }

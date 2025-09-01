@@ -8,7 +8,7 @@ import co.com.pragma.crediya.api.model.response.UserResponse;
 import co.com.pragma.crediya.usecase.user.UserUseCase;
 import com.pragma.observability.AppLogger;
 import com.pragma.observability.LogCtxResolver;
-import com.pragma.observability.LogEvents;
+import com.pragma.observability.LogEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -91,7 +91,7 @@ public class UserHandler {
                 .flatMap(ctx ->
                         serverRequest.bodyToMono(UserRequest.class)
                                 .doOnNext(b -> log.info(
-                                        LogEvents.USER_CREATE_REQ,
+                                        LogEvent.USER_CREATE_REQ.getCode(),
                                         "Create user request",
                                         ctx,
                                         Map.of("email", b.getEmail())
@@ -99,7 +99,7 @@ public class UserHandler {
                                 .map(UserMapper::toDomain)
                                 .flatMap(userUseCase::save)
                                 .doOnSuccess(u -> log.info(
-                                        LogEvents.USER_CREATED,
+                                        LogEvent.USER_CREATED.getCode(),
                                         "User created",
                                         ctx,
                                         Map.of("userId", u.getId(), "email", u.getEmail())
