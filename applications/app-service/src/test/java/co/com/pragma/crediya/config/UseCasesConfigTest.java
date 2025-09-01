@@ -1,45 +1,41 @@
 package co.com.pragma.crediya.config;
 
+import co.com.pragma.crediya.model.user.gateways.UserRepository;
+import co.com.pragma.crediya.usecase.user.UserUseCase;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class UseCasesConfigTest {
 
     @Test
     void testUseCaseBeansExist() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(TestConfig.class)) {
-            String[] beanNames = context.getBeanDefinitionNames();
+        try (AnnotationConfigApplicationContext ctx =
+                     new AnnotationConfigApplicationContext(TestConfig.class)) {
 
-            boolean useCaseBeanFound = false;
-            for (String beanName : beanNames) {
-                if (beanName.endsWith("UseCase")) {
-                    useCaseBeanFound = true;
-                    break;
-                }
-            }
+            String[] names = ctx.getBeanNamesForType(UserUseCase.class);
+            assertThat(names)
+                    .as("Debe existir al menos un bean de tipo UserUseCase")
+                    .isNotEmpty();
 
-            assertTrue(useCaseBeanFound, "No beans ending with 'Use Case' were found");
+            UserUseCase useCase = ctx.getBean(UserUseCase.class);
+            assertThat(useCase).isNotNull();
         }
     }
 
     @Configuration
-    @Import(UseCasesConfig.class)
+    @Import(UseCasesConfig.class) // tu @Configuration que declara los @Bean de casos de uso
     static class TestConfig {
-
         @Bean
-        public MyUseCase myUseCase() {
-            return new MyUseCase();
-        }
-    }
+        public UserRepository userRepository() {
 
-    static class MyUseCase {
-        public String execute() {
-            return "MyUseCase Test";
+            return Mockito.mock(UserRepository.class);
         }
+
     }
 }

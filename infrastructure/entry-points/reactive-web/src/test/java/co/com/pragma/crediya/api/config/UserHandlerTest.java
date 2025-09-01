@@ -47,10 +47,10 @@ class UserHandlerWebTest {
     WebTestClient client;
 
     @Autowired
-    UserUseCase userUseCase;   // mock
+    UserUseCase userUseCase;
 
     @Autowired
-    AppLogger appLogger;       // mock
+    AppLogger appLogger;
 
     @BeforeEach
     void resetMocks() {
