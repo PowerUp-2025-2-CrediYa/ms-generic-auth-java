@@ -63,7 +63,7 @@ public class UserHandler {
                                     examples = @ExampleObject(
                                             value = """
                                                     {
-                                                      "error": "Bad request.",
+                                                      "error": "Unprocessable Entity",
                                                       "message": "El salario base debe estar entre 0 y 15.000.000",
                                                       "path": "/api/v1/usuarios",
                                                       "status": 422,

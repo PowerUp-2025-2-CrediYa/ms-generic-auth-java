@@ -9,9 +9,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import reactor.core.Exceptions;
 
 public class UserDBException extends RuntimeException {
-    UserDBException() {}
+    UserDBException() {
+    }
 
-    // ---- Punto de entrada con baja complejidad ----
     public static RuntimeException valideDBException(DataIntegrityViolationException exception, User user) {
         DbError db = extractDbError(exception);
 
@@ -25,10 +25,8 @@ public class UserDBException extends RuntimeException {
             if (mapped != null) return mapped;
         }
 
-        return exception; // fallback
+        return exception;
     }
-
-    // ---- Helpers “pequeños” (no cuentan en la complejidad del método principal) ----
 
     private static RuntimeException mapUniqueViolation(String msg, User u) {
         if (contains(msg, "usuarios_email_key")) {
@@ -104,5 +102,6 @@ public class UserDBException extends RuntimeException {
     }
 
     // Java 16+ record para agrupar datos
-    private record DbError(String sqlState, String message) {}
+    private record DbError(String sqlState, String message) {
+    }
 }
