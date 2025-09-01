@@ -6,6 +6,9 @@ import co.com.pragma.crediya.api.model.request.UserRequest;
 import co.com.pragma.crediya.api.model.response.ApiError;
 import co.com.pragma.crediya.api.model.response.UserResponse;
 import co.com.pragma.crediya.usecase.user.UserUseCase;
+import com.pragma.observability.AppLogger;
+import com.pragma.observability.LogCtxResolver;
+import com.pragma.observability.LogEvents;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -21,6 +24,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 
 @Component
 @RequiredArgsConstructor
@@ -28,6 +33,7 @@ import reactor.core.publisher.Mono;
 public class UserHandler {
 
     private final UserUseCase userUseCase;
+    private final AppLogger log;
 
     @Operation(
             summary = "Crear usuario",
@@ -81,14 +87,28 @@ public class UserHandler {
             }
     )
     public Mono<ServerResponse> listenSaveUser(ServerRequest serverRequest) {
+        return LogCtxResolver.current() // helper del impl spring
+                .flatMap(ctx ->
+                        serverRequest.bodyToMono(UserRequest.class)
+                                .doOnNext(b -> log.info(
+                                        LogEvents.USER_CREATE_REQ,
+                                        "Create user request",
+                                        ctx,
+                                        Map.of("email", b.getEmail())
+                                ))
+                                .map(UserMapper::toDomain)
+                                .flatMap(userUseCase::save)
+                                .doOnSuccess(u -> log.info(
+                                        LogEvents.USER_CREATED,
+                                        "User created",
+                                        ctx,
+                                        Map.of("userId", u.getId(), "email", u.getEmail())
+                                ))
+                                .flatMap(saved -> ServerResponse.status(HttpStatus.CREATED)
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .bodyValue(UserResponseMapper.fromDomain(saved)))
+                );
 
-        return serverRequest.bodyToMono(UserRequest.class)
-                .map(UserMapper::toDomain)
-                .flatMap(userUseCase::save)
-                .flatMap(savedUser -> ServerResponse
-                        .status(HttpStatus.CREATED)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(UserResponseMapper.fromDomain(savedUser)));
 
     }
 }

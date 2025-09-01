@@ -24,3 +24,4 @@ include ':r2dbc-postgresql'
 project(':r2dbc-postgresql').projectDir = file('./infrastructure/driven-adapters/r2dbc-postgresql')
 include ':reactive-web'
 project(':reactive-web').projectDir = file('./infrastructure/entry-points/reactive-web')
+includeBuild('D:/LocalSolraceumx/Learning/Pragma/CrediYa/observability-toolkit/shared-observabilty-toolkit')
