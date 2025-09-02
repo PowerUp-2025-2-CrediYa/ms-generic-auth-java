@@ -3,6 +3,7 @@ package co.com.pragma.crediya.api.model.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -27,6 +28,12 @@ public class UserResponse {
 
     @Schema(description = "Documento de identidad", example = "123456789")
     private String documentId;
+
+    @Schema(description = "Fecha de nacimiento", example = "01/01/1985")
+    private LocalDate birthDate;
+
+    @Schema(description = "Dirección de residencia", example = "Cale 78 # 12-05")
+    private String address;
 
     @Schema(description = "Número de teléfono", example = "+573001234567")
     private String phoneNumber;

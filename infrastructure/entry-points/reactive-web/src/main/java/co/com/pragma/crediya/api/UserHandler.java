@@ -87,7 +87,8 @@ public class UserHandler {
             }
     )
     public Mono<ServerResponse> listenSaveUser(ServerRequest serverRequest) {
-        return LogCtxResolver.current() // helper del impl spring
+
+        return LogCtxResolver.current()
                 .flatMap(ctx ->
                         serverRequest.bodyToMono(UserRequest.class)
                                 .doOnNext(b -> log.info(

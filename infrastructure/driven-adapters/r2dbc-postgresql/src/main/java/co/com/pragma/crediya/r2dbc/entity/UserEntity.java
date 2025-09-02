@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Table("auth.usuarios")
@@ -30,6 +31,13 @@ public class UserEntity {
 
     @Column("documento_identidad")
     private String documentId;
+
+    @Column("fecha_nacimiento")
+    private LocalDate birthDate;
+
+    @Column("direccion")
+    private String address;
+
 
     @Column("telefono")
     private String phoneNumber;

@@ -1,14 +1,16 @@
-package co.com.pragma.crediya.usecase.user;
+package co.com.pragma.crediya.model.user.helper;
 
 import co.com.pragma.crediya.model.user.User;
+import org.junit.jupiter.params.provider.Arguments;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+import java.util.stream.Stream;
 
-final class UserValidator {
+public final class UserValidatorUtils {
 
-    static User valid() {
+    static User validUser() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate fechaNacimiento = LocalDate.parse("01/01/1990", formatter);
@@ -25,12 +27,15 @@ final class UserValidator {
         user.setRoleId(1);
         user.setBaseSalary(Double.valueOf("1000000"));
         return user;
-
     }
 
-    static User withBaseSalary(String value) {
-        var u = valid();
-        u.setBaseSalary(Double.valueOf(value));
-        return u;
+
+    public static Stream<Arguments> invalidEmails() {
+        return Stream.of(
+                Arguments.of(null, "El correo electrónico no puede estar vacío"),
+                Arguments.of("  ", "El correo electrónico no puede estar vacío"),
+                Arguments.of("correo-invalido-sin-arroba", "El formato del correo electrónico no es válido")
+        );
     }
+
 }

@@ -1,7 +1,10 @@
 package co.com.pragma.crediya.api.model.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -22,6 +25,13 @@ public class UserRequest {
 
     @Schema(description = "Documento de identidad", example = "123456789")
     private String documentId;
+
+    @Schema(description = "Fecha de nacimiento", example = "01/01/1985")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/uuuu")
+    private LocalDate birthDate;
+
+    @Schema(description = "Dirección de residencia", example = "Cale 78 # 12-05")
+    private String address;
 
     @Schema(description = "Número de teléfono", example = "+573001234567")
     private String phoneNumber;

@@ -14,6 +14,8 @@ public class UserResponseMapper {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .documentId(user.getDocumentId())
+                .birthDate(user.getBirthDate())
+                .address(user.getAddress())
                 .phoneNumber(user.getPhoneNumber())
                 .roleId(user.getRoleId())
                 .baseSalary(user.getBaseSalary())

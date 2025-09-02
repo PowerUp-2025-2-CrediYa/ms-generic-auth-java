@@ -12,6 +12,8 @@ public class UserMapper {
                 .lastName(dto.getLastName())
                 .email(dto.getEmail())
                 .documentId(dto.getDocumentId())
+                .birthDate(dto.getBirthDate())
+                .address(dto.getAddress())
                 .phoneNumber(dto.getPhoneNumber())
                 .roleId(dto.getRoleId())
                 .baseSalary(dto.getBaseSalary())
