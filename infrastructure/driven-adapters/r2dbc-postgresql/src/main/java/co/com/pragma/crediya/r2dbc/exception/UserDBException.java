@@ -101,7 +101,6 @@ public class UserDBException extends RuntimeException {
         return null;
     }
 
-    // Java 16+ record para agrupar datos
     private record DbError(String sqlState, String message) {
     }
 }

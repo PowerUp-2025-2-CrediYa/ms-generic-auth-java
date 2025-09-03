@@ -114,7 +114,7 @@ class UserValidatorTest {
                 InvalidBaseSalaryRangeException.class,
                 () -> UserValidator.validate(u)
         );
-        // toPlainString de 15_000_001.0 → "15000001"
+
         assertTrue(ex.getMessage() == null || ex.getMessage().contains("15000001"),
                 "El mensaje debería contener '15000001' o ser nulo según tu implementación");
     }

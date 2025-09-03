@@ -32,7 +32,7 @@ class UserUseCaseTest{
         User user = UserValidator.valid();
         when(userRepositoryGateway.saveUser(user)).thenReturn(Mono.just(user));
 
-        StepVerifier.create(useCase.save(user))
+        StepVerifier.create(useCase.saveUser(user))
                 .expectNext(user)
                 .verifyComplete();
 
@@ -44,7 +44,7 @@ class UserUseCaseTest{
 
         User invalid = UserValidator.withBaseSalary("-1");
 
-        StepVerifier.create(useCase.save(invalid))
+        StepVerifier.create(useCase.saveUser(invalid))
                 .expectError(InvalidBaseSalaryRangeException.class)
                 .verify();
 
@@ -59,7 +59,7 @@ class UserUseCaseTest{
         RuntimeException boom = new RuntimeException("DB down");
         when(userRepositoryGateway.saveUser(any())).thenReturn(Mono.error(boom));
 
-        StepVerifier.create(useCase.save(user))
+        StepVerifier.create(useCase.saveUser(user))
                 .expectErrorMatches(ex -> ex == boom)
                 .verify();
 
@@ -74,11 +74,25 @@ class UserUseCaseTest{
 
         verifyNoInteractions(userRepositoryGateway);
 
-        StepVerifier.create(useCase.save(user))
+        StepVerifier.create(useCase.saveUser(user))
                 .expectNext(user)
                 .verifyComplete();
 
         verify(userRepositoryGateway).saveUser(user);
+    }
+
+    @Test
+    void get_whenUserExists_getAndReturns(){
+        User user = UserValidator.valid();
+        String documentId = "123456789";
+
+        when(userRepositoryGateway.findUserByDocumentId(documentId)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(useCase.findUserByDocumentId(documentId))
+                .expectNext(user)
+                .verifyComplete();
+
+        verify(userRepositoryGateway).findUserByDocumentId(documentId);
     }
 
 }

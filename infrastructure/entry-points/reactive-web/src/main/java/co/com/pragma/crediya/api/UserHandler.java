@@ -10,6 +10,8 @@ import com.pragma.observability.AppLogger;
 import com.pragma.observability.LogCtxResolver;
 import com.pragma.observability.LogEvent;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -98,7 +100,7 @@ public class UserHandler {
                                         Map.of("email", b.getEmail())
                                 ))
                                 .map(UserMapper::toDomain)
-                                .flatMap(userUseCase::save)
+                                .flatMap(userUseCase::saveUser)
                                 .doOnSuccess(u -> log.info(
                                         LogEvent.USER_CREATED.getCode(),
                                         "User created",
@@ -109,7 +111,41 @@ public class UserHandler {
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .bodyValue(UserResponseMapper.fromDomain(saved)))
                 );
+    }
 
+    @Operation(
+            summary = "Consultar un usuario",
+            description = "Recibe el número de documento y lo consulta en el sistema",
+            parameters = {
+                    @Parameter(name = "documentId", in = ParameterIn.QUERY, required = true, description = "Identificador del documento")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Usuario existe",
+                            content = @Content(schema = @Schema(implementation = UserResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Usuario no existe",
+                            content = @Content(schema = @Schema(implementation = ApiError.class),
+                                    examples = @ExampleObject(
+                                            value = """
+                                                    {
+                                                      "error": "Not Found",
+                                                      "message": "El usuario con identificación: 178822541 no existe",
+                                                      "path": "/api/v1/usuarios",
+                                                      "status": 404,
+                                                      "timestamp": "2025-09-03T00:00:16.677658100Z"
+                                                    }
+                                                    """
+                                    )))
+            }
+    )
+    public Mono<ServerResponse> listenFindUserByDocumentId(ServerRequest serverRequest){
+
+        String documentId = serverRequest.queryParam("documentId")
+                .orElseThrow(() -> new IllegalArgumentException("documentId requerido"));
+
+        return userUseCase.findUserByDocumentId(documentId)
+                .flatMap(user -> ServerResponse.status(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(UserResponseMapper.fromDomain(user)));
 
     }
 }

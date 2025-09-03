@@ -21,24 +21,22 @@ import static org.mockito.Mockito.*;
 
 class UserReactiveRepositoryAdapterTest {
 
-    UserReactiveRepository repository;         // mock
-    TransactionalOperator tx;                  // mock
-    ObjectMapper mapper = mock(ObjectMapper.class);                      // fake simple
-    UserReactiveRepositoryAdapter adapter;     // SUT
+    UserReactiveRepository repository;
+    TransactionalOperator tx;
+    ObjectMapper mapper = mock(ObjectMapper.class);
+    UserReactiveRepositoryAdapter adapter;
 
     @BeforeEach
     void setUp() {
         repository = mock(UserReactiveRepository.class);
         tx = mock(TransactionalOperator.class);
 
-        // El TransactionalOperator debe devolver el mismo Mono que recibe (wrapper)
         when(tx.transactional(any(Mono.class)))
                 .thenAnswer(inv -> inv.getArgument(0));
 
-        // Fake mapper mínimo para mapear Domain <-> Entity
         mapper = new ObjectMapper() {
             @Override
-            @SuppressWarnings("unchecked")
+
             public <T> T map(Object source, Class<T> target) {
                 if (source == null) return null;
                 if (source instanceof User u && target.equals(UserEntity.class)) {
@@ -70,8 +68,7 @@ class UserReactiveRepositoryAdapterTest {
     }
 
     @Test
-    void saveUser_ok_envuelveEnTransaccion_yDevuelveDominio() {
-        // given
+    void saveUserAndReturnDomain() {
         User user = new User();
         user.setId(UUID.randomUUID());
         user.setEmail("ok@dom.com");
@@ -86,7 +83,6 @@ class UserReactiveRepositoryAdapterTest {
 
         when(repository.save(any(UserEntity.class))).thenReturn(Mono.just(savedEntity));
 
-        // when/then
         StepVerifier.create(adapter.saveUser(user))
                 .assertNext(u -> {
                     assertThat(u.getId()).isEqualTo(user.getId());
@@ -95,22 +91,19 @@ class UserReactiveRepositoryAdapterTest {
                 })
                 .verifyComplete();
 
-        // Verifica que se llamó repo.save con una entidad mapeada
         ArgumentCaptor<UserEntity> cap = ArgumentCaptor.forClass(UserEntity.class);
         verify(repository).save(cap.capture());
         assertThat(cap.getValue().getEmail()).isEqualTo("ok@dom.com");
 
-        // Verifica que SI se invocó el operador transaccional
         verify(tx).transactional(any(Mono.class));
     }
 
     @Test
-    void saveUser_violaUnicoEmail_mapeaAEmailAlreadyExists() {
+    void saveUserIfEmailIsUniqueOrThrowEmailAlreadyExists() {
         User user = new User();
         user.setEmail("dup@dom.com");
         user.setDocumentId("DOC2");
 
-        // Simula excepción de unicidad por constraint de email (ajusta el nombre a tu real)
         DataIntegrityViolationException dive = new DataIntegrityViolationException(
                 "duplicate key value violates unique constraint \"usuarios_email_key\""
         );
@@ -124,7 +117,7 @@ class UserReactiveRepositoryAdapterTest {
     }
 
     @Test
-    void saveUser_violaUnicoDocumento_mapeaADocumentIdAlreadyExists() {
+    void saveUserIfDocumentIsUniqueOrThrowDocumentAlreadyExists() {
         User user = new User();
         user.setEmail("ok@dom.com");
         user.setDocumentId("DOC-DUP");
@@ -142,7 +135,7 @@ class UserReactiveRepositoryAdapterTest {
     }
 
     @Test
-    void saveUser_violaOtraConstraint_reenviaLaExcepcionOriginal() {
+        void saveUser_rethrowsConstraintViolationException() {
         User user = new User();
         user.setEmail("x@y.com");
         user.setDocumentId("D1");
@@ -153,7 +146,7 @@ class UserReactiveRepositoryAdapterTest {
         when(repository.save(any(UserEntity.class))).thenReturn(Mono.error(dive));
 
         StepVerifier.create(adapter.saveUser(user))
-                .expectError(DataIntegrityViolationException.class) // fallback si tu valideDBException así lo decide
+                .expectError(DataIntegrityViolationException.class)
                 .verify();
     }
 }

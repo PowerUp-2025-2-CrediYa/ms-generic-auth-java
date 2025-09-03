@@ -7,4 +7,6 @@ public interface UserRepository {
 
     Mono<User> saveUser(User user);
 
+    Mono<User> findUserByDocumentId(String documentId);
+
 }

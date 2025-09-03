@@ -45,8 +45,7 @@ class PostgresqlConnectionPropertiesTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(BindConfig.class)
                 .withPropertyValues(
-                        "adapters.r2dbc.host=localhost" // solo una propiedad
-                )
+                        "adapters.r2dbc.host=localhost" )
                 .run(ctx -> {
                     PostgresqlConnectionProperties props = ctx.getBean(PostgresqlConnectionProperties.class);
                     assertThat(props.host()).isEqualTo("localhost");

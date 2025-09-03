@@ -27,6 +27,10 @@ public class ExceptionHelper {
             return HttpStatus.BAD_REQUEST;
         }
 
+        if (ex instanceof UserNotExistsException){
+            return HttpStatus.NOT_FOUND;
+        }
+
         return HttpStatus.INTERNAL_SERVER_ERROR;
     }
 }

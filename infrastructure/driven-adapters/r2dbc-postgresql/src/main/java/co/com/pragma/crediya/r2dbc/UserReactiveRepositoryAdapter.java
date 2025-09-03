@@ -1,6 +1,7 @@
 package co.com.pragma.crediya.r2dbc;
 
 import co.com.pragma.crediya.model.user.User;
+import co.com.pragma.crediya.model.user.exception.UserNotExistsException;
 import co.com.pragma.crediya.model.user.gateways.UserRepository;
 import co.com.pragma.crediya.r2dbc.entity.UserEntity;
 import co.com.pragma.crediya.r2dbc.helper.ReactiveAdapterOperations;
@@ -37,9 +38,18 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
 
         Mono<User> flow =
                 super.save(user)
-                        .onErrorMap(DataIntegrityViolationException.class, ex -> valideDBException(ex, user));
+                        .onErrorMap(DataIntegrityViolationException.class,
+                                ex -> valideDBException(ex, user));
 
         return transactionalOperator.transactional(flow);
+    }
+
+    @Override
+    public Mono<User> findUserByDocumentId(String documentId){
+        return repository.findByDocumentId(documentId)
+                .map(this::toEntity)
+                .onErrorMap(RuntimeException.class,
+                        ex -> new UserNotExistsException(documentId));
     }
 
 }

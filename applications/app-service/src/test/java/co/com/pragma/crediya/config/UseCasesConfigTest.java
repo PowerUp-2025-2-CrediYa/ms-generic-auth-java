@@ -29,7 +29,7 @@ class UseCasesConfigTest {
     }
 
     @Configuration
-    @Import(UseCasesConfig.class) // tu @Configuration que declara los @Bean de casos de uso
+    @Import(UseCasesConfig.class)
     static class TestConfig {
         @Bean
         public UserRepository userRepository() {

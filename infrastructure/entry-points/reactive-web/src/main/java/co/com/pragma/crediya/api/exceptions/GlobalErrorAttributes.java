@@ -1,9 +1,6 @@
 package co.com.pragma.crediya.api.exceptions;
 
-import co.com.pragma.crediya.model.user.exception.DocumentIdAlreadyExistsException;
-import co.com.pragma.crediya.model.user.exception.EmailAlreadyExistsException;
-import co.com.pragma.crediya.model.user.exception.InvalidBaseSalaryRangeException;
-import co.com.pragma.crediya.model.user.exception.RoleNotExistsException;
+import co.com.pragma.crediya.model.user.exception.*;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
@@ -28,7 +25,9 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
             status = HttpStatus.CONFLICT.value();
         } else if (ex instanceof InvalidBaseSalaryRangeException) {
             status = HttpStatus.UNPROCESSABLE_ENTITY.value();
-        } else {
+        } else if (ex instanceof UserNotExistsException){
+            status = HttpStatus.NOT_FOUND.value();
+        }else {
             status = HttpStatus.BAD_REQUEST.value();
         }
 
