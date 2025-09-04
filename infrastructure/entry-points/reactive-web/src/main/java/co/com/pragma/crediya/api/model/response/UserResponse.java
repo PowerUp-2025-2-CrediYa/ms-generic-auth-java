@@ -1,5 +1,6 @@
 package co.com.pragma.crediya.api.model.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Schema(description = "Respuesta al crear un usuario")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
 
     @Schema(description = "ID único del usuario", example = "550e8400-e29b-41d4-a716-446655440000")

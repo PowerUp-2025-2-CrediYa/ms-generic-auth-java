@@ -145,7 +145,7 @@ public class UserHandler {
         return userUseCase.findUserByDocumentId(documentId)
                 .flatMap(user -> ServerResponse.status(HttpStatus.OK)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(UserResponseMapper.fromDomain(user)));
+                        .bodyValue(UserResponseMapper.fromDomainToClient(user)));
 
     }
 }

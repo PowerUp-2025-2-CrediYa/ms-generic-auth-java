@@ -22,4 +22,17 @@ public class UserResponseMapper {
                 .build();
     }
 
+    public static UserResponse fromDomainToClient(User user) {
+        return UserResponse.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .documentId(user.getDocumentId())
+                .birthDate(user.getBirthDate())
+                .address(user.getAddress())
+                .phoneNumber(user.getPhoneNumber())
+                .baseSalary(user.getBaseSalary())
+                .build();
+    }
+
 }
