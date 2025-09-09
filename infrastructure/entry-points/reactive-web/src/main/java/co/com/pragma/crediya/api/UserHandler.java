@@ -137,7 +137,7 @@ public class UserHandler {
                                     )))
             }
     )
-    public Mono<ServerResponse> listenFindUserByDocumentId(ServerRequest serverRequest){
+    public Mono<ServerResponse> listenFindUserByDocumentId(ServerRequest serverRequest) {
 
         String documentId = serverRequest.queryParam("documentId")
                 .orElseThrow(() -> new IllegalArgumentException("documentId requerido"));

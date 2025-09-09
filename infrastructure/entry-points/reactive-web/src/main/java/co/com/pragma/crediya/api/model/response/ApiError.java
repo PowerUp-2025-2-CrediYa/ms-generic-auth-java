@@ -19,4 +19,5 @@ public record ApiError(
         @Schema(example = "2025-08-30T02:24:46.819150400Z")
         String timestamp
 
-) {}
+) {
+}

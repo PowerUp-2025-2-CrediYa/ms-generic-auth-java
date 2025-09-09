@@ -10,7 +10,8 @@ public final class EmailValidator {
             "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
     );
 
-    private EmailValidator() {}
+    private EmailValidator() {
+    }
 
     public static void validate(String email) {
         if (email == null || email.trim().isEmpty()) {

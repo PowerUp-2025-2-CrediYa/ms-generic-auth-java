@@ -43,3 +43,13 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
+jwt:
+  issuer: "clean-arch-demo"
+  audience: "security-api"
+  access-token-seconds: 900
+  refresh-token-seconds: 1209600
+  rsa:
+    public: "classpath:keys/public.pem"
+    private: "classpath:keys/private.pem"
+
+

@@ -27,7 +27,8 @@ class ReactiveAdapterOperationsTest {
         repository = Mockito.mock(DummyRepository.class);
         mapper = Mockito.mock(ObjectMapper.class);
         operations = new ReactiveAdapterOperations<DummyEntity, DummyData, String, DummyRepository>(
-                repository, mapper, DummyEntity::toEntity) {};
+                repository, mapper, DummyEntity::toEntity) {
+        };
     }
 
     @Test
@@ -164,5 +165,6 @@ class ReactiveAdapterOperationsTest {
         }
     }
 
-    interface DummyRepository extends ReactiveCrudRepository<DummyData, String>, ReactiveQueryByExampleExecutor<DummyData> {}
+    interface DummyRepository extends ReactiveCrudRepository<DummyData, String>, ReactiveQueryByExampleExecutor<DummyData> {
+    }
 }

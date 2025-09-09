@@ -45,9 +45,12 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 })
 class UserHandlerWebTest {
 
-    @Autowired WebTestClient webTestClient;
-    @Autowired UserUseCase userUseCase;
-    @Autowired AppLogger appLogger;
+    @Autowired
+    WebTestClient webTestClient;
+    @Autowired
+    UserUseCase userUseCase;
+    @Autowired
+    AppLogger appLogger;
 
     @BeforeEach
     void resetMocks() {
@@ -57,8 +60,8 @@ class UserHandlerWebTest {
     @Test
     void createUserWithValidDataReturns201Created() {
         String payload = """
-            {"email":"nuevo@dom.com","documentId":"D1","firstName":"Carlos","baseSalary":1000000}
-        """;
+                    {"email":"nuevo@dom.com","documentId":"D1","firstName":"Carlos","baseSalary":1000000}
+                """;
 
         User saved = new User();
         saved.setId(UUID.randomUUID());
@@ -81,8 +84,8 @@ class UserHandlerWebTest {
     @Test
     void createUseWithExistingUserReturns409Conflict() {
         String payload = """
-            {"email":"dup@dom.com","documentId":"D2","firstName":"Carlos","baseSalary":1000000}
-        """;
+                    {"email":"dup@dom.com","documentId":"D2","firstName":"Carlos","baseSalary":1000000}
+                """;
 
         when(userUseCase.saveUser(any()))
                 .thenReturn(Mono.error(new co.com.pragma.crediya.model.user.exception.EmailAlreadyExistsException("dup@dom.com")));
@@ -103,8 +106,8 @@ class UserHandlerWebTest {
     @Test
     void createUserWhenSalaryIsUnderageReturns422UnprocessableEntity() {
         String payload = """
-            {"firstName":"Jon", "lastName":"Doe", "email":"ok@dom.com","documentId":"123456789","phoneNumber":"1234568910", "baseSalary":-1, "roleId":"1"}
-        """;
+                    {"firstName":"Jon", "lastName":"Doe", "email":"ok@dom.com","documentId":"123456789","phoneNumber":"1234568910", "baseSalary":-1, "roleId":"1"}
+                """;
 
         when(userUseCase.saveUser(any()))
                 .thenReturn(Mono.error(new co.com.pragma.crediya.model.user.exception.InvalidBaseSalaryRangeException("El salario base debe ser >= 0")));
@@ -143,20 +146,36 @@ class UserHandlerWebTest {
     static class TestRoutes {
         @Bean
         RouterFunction<ServerResponse> routes(UserHandler handler) {
-              return route(GET(BASE_URL), handler::listenFindUserByDocumentId)
+            return route(GET(BASE_URL), handler::listenFindUserByDocumentId)
                     .andRoute(POST("/api/v1/usuarios"), handler::listenSaveUser);
         }
     }
 
     @TestConfiguration
     static class TestMocks {
-        @Bean UserUseCase userUseCase() { return Mockito.mock(UserUseCase.class); }
-        @Bean AppLogger appLogger() { return Mockito.mock(AppLogger.class); }
-        @Bean ExceptionHelper exceptionHelper() { return new ExceptionHelper(); }
-        @Bean UserHandler userHandler(UserUseCase uc, AppLogger log) { return new UserHandler(uc, log); }
+        @Bean
+        UserUseCase userUseCase() {
+            return Mockito.mock(UserUseCase.class);
+        }
+
+        @Bean
+        AppLogger appLogger() {
+            return Mockito.mock(AppLogger.class);
+        }
+
+        @Bean
+        ExceptionHelper exceptionHelper() {
+            return new ExceptionHelper();
+        }
+
+        @Bean
+        UserHandler userHandler(UserUseCase uc, AppLogger log) {
+            return new UserHandler(uc, log);
+        }
     }
 
     @SpringBootConfiguration
     @EnableAutoConfiguration
-    static class BootTestConfig { }
+    static class BootTestConfig {
+    }
 }

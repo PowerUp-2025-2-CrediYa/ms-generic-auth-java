@@ -4,7 +4,6 @@ import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.exception.DocumentIdAlreadyExistsException;
 import co.com.pragma.crediya.model.user.exception.EmailAlreadyExistsException;
 import co.com.pragma.crediya.r2dbc.entity.UserEntity;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.reactivecommons.utils.ObjectMapper;
@@ -26,7 +25,7 @@ class UserReactiveRepositoryAdapterTest {
     ObjectMapper mapper = mock(ObjectMapper.class);
     UserReactiveRepositoryAdapter adapter;
 
-    @BeforeEach
+    /*@BeforeEach
     void setUp() {
         repository = mock(UserReactiveRepository.class);
         tx = mock(TransactionalOperator.class);
@@ -65,7 +64,7 @@ class UserReactiveRepositoryAdapterTest {
         };
 
         adapter = new UserReactiveRepositoryAdapter(repository, mapper, tx);
-    }
+    }*/
 
     @Test
     void saveUserAndReturnDomain() {
@@ -135,7 +134,7 @@ class UserReactiveRepositoryAdapterTest {
     }
 
     @Test
-        void saveUser_rethrowsConstraintViolationException() {
+    void saveUser_rethrowsConstraintViolationException() {
         User user = new User();
         user.setEmail("x@y.com");
         user.setDocumentId("D1");

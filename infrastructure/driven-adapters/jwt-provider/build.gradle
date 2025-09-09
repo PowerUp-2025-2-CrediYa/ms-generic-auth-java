@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':model')
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.37.3'
+    implementation 'io.projectreactor:reactor-core:3.6.9'
+    implementation 'org.springframework:spring-context:6.1.12'
+}

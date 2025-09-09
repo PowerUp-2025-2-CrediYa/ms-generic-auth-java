@@ -5,7 +5,8 @@ import co.com.pragma.crediya.model.user.exception.InvalidUserException;
 
 public final class UserValidator {
 
-    private UserValidator() {}
+    private UserValidator() {
+    }
 
     public static void validate(User user) {
         if (isNullOrEmpty(user.getFirstName())) {

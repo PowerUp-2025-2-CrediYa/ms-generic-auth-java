@@ -25,9 +25,9 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
             status = HttpStatus.CONFLICT.value();
         } else if (ex instanceof InvalidBaseSalaryRangeException) {
             status = HttpStatus.UNPROCESSABLE_ENTITY.value();
-        } else if (ex instanceof UserNotExistsException){
+        } else if (ex instanceof UserNotExistsException) {
             status = HttpStatus.NOT_FOUND.value();
-        }else {
+        } else {
             status = HttpStatus.BAD_REQUEST.value();
         }
 

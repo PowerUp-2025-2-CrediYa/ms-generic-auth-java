@@ -10,7 +10,8 @@ public final class AddressValidator {
             "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9#\\-.,ºª/\\s]{1,255}$"
     );
 
-    private AddressValidator() {}
+    private AddressValidator() {
+    }
 
     public static void validate(String address) {
         if (address == null || address.trim().isEmpty()) {

@@ -10,12 +10,12 @@ public final class UtilUserTesting {
 
     public static final String BASE_URL = "/api/v1/usuarios";
 
-    public static User getUser(){
+    public static User getUser() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate fechaNacimiento = LocalDate.parse("01/01/1990", formatter);
 
-      return User.builder()
+        return User.builder()
                 .firstName("Jon")
                 .lastName("Doe")
                 .email("ok@dom.com")
@@ -29,7 +29,7 @@ public final class UtilUserTesting {
     }
 
 
-    public static UserRequest getUserRequest(){
+    public static UserRequest getUserRequest() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate fechaNacimiento = LocalDate.parse("01/01/1990", formatter);

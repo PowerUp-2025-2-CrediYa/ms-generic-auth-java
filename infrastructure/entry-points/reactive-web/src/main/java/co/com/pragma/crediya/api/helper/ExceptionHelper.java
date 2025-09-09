@@ -27,7 +27,7 @@ public class ExceptionHelper {
             return HttpStatus.BAD_REQUEST;
         }
 
-        if (ex instanceof UserNotExistsException){
+        if (ex instanceof UserNotExistsException) {
             return HttpStatus.NOT_FOUND;
         }
 

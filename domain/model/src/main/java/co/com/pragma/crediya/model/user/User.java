@@ -1,8 +1,10 @@
 package co.com.pragma.crediya.model.user;
 
+
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -19,7 +21,6 @@ public class User {
     private LocalDate birthDate;
     private String address;
     private String phoneNumber;
-    private Integer roleId;
     private Double baseSalary;
-
+    private List<String> roles;
 }

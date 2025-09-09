@@ -41,7 +41,7 @@ public class UserDBException extends RuntimeException {
 
     private static RuntimeException mapForeignKeyViolation(String msg, User u) {
         if (contains(msg, "usuarios_id_rol_fkey")) {
-            return new RoleNotExistsException(String.valueOf(u.getRoleId()));
+            return new RoleNotExistsException(String.valueOf(u.getRoles()));
         }
         return null;
     }

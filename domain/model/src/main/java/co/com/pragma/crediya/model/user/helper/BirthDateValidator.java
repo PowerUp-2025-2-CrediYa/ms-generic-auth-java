@@ -16,7 +16,8 @@ public final class BirthDateValidator {
             DateTimeFormatter.ofPattern("d-M-yyyy")
     );
 
-    private BirthDateValidator() {}
+    private BirthDateValidator() {
+    }
 
     public static void validate(String birthDate) {
         if (birthDate == null || birthDate.trim().isEmpty()) {

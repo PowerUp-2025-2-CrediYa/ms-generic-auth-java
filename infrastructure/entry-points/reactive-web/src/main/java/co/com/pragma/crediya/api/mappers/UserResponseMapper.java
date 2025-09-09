@@ -5,7 +5,8 @@ import co.com.pragma.crediya.model.user.User;
 
 public class UserResponseMapper {
 
-    UserResponseMapper(){}
+    UserResponseMapper() {
+    }
 
     public static UserResponse fromDomain(User user) {
         return UserResponse.builder()
@@ -17,7 +18,7 @@ public class UserResponseMapper {
                 .birthDate(user.getBirthDate())
                 .address(user.getAddress())
                 .phoneNumber(user.getPhoneNumber())
-                .roleId(user.getRoleId())
+                .roles(user.getRoles())
                 .baseSalary(user.getBaseSalary())
                 .build();
     }

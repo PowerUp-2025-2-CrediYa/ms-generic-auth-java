@@ -5,7 +5,9 @@ import co.com.pragma.crediya.model.user.User;
 
 public class UserMapper {
 
-    UserMapper(){}
+    UserMapper() {
+    }
+
     public static User toDomain(UserRequest dto) {
         return User.builder()
                 .firstName(dto.getFirstName())
@@ -15,8 +17,8 @@ public class UserMapper {
                 .birthDate(dto.getBirthDate())
                 .address(dto.getAddress())
                 .phoneNumber(dto.getPhoneNumber())
-                .roleId(dto.getRoleId())
                 .baseSalary(dto.getBaseSalary())
+                .roles(dto.getRoles())
                 .build();
     }
 

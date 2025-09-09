@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,10 +37,10 @@ public class UserRequest {
     @Schema(description = "Número de teléfono", example = "+573001234567")
     private String phoneNumber;
 
-    @Schema(description = "ID del rol", example = "2")
-    private Integer roleId;
-
     @Schema(description = "Salario base entre 0 y 15.000.000", example = "4500000")
     private Double baseSalary;
+
+    @Schema(description = "Códigos de rol (ROLE_*)", example = "[\"ROLE_ADMINISTRADOR\",\"ROLE_ASESOR\"]")
+    private List<String> roles;
 
 }

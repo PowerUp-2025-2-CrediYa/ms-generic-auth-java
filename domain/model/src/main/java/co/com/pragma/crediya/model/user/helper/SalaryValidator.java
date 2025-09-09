@@ -9,7 +9,8 @@ public final class SalaryValidator {
 
     private static final double MAX_SALARY = 15_000_000;
 
-    private SalaryValidator() {}
+    private SalaryValidator() {
+    }
 
     public static void validate(Double salary) {
         if (salary == null) {

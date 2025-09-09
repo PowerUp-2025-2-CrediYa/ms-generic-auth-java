@@ -2,6 +2,7 @@ package co.com.pragma.crediya.usecase.user;
 
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.exception.InvalidBaseSalaryRangeException;
+import co.com.pragma.crediya.model.user.gateways.RoleRepository;
 import co.com.pragma.crediya.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,16 +15,19 @@ import reactor.test.StepVerifier;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserUseCaseTest{
+class UserUseCaseTest {
 
     @Mock
     UserRepository userRepositoryGateway;
+
+    @Mock
+    RoleRepository roleRepositoryGateway;
 
     UserUseCase useCase;
 
     @BeforeEach
     void setUp() {
-        useCase = new UserUseCase(userRepositoryGateway);
+        useCase = new UserUseCase(userRepositoryGateway, roleRepositoryGateway);
     }
 
     @Test
@@ -82,7 +86,7 @@ class UserUseCaseTest{
     }
 
     @Test
-    void get_whenUserExists_getAndReturns(){
+    void get_whenUserExists_getAndReturns() {
         User user = UserValidator.valid();
         String documentId = "123456789";
 
