@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public interface RoleRepository {
+public interface RoleGateway {
 
     Flux<String> findRoleCodesByUserId(UUID userId);
 

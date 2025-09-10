@@ -1,6 +1,6 @@
 package co.com.pragma.crediya.r2dbc;
 
-import co.com.pragma.crediya.model.user.gateways.RoleRepository;
+import co.com.pragma.crediya.model.user.gateways.RoleGateway;
 import co.com.pragma.crediya.r2dbc.entity.RoleEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.r2dbc.core.DatabaseClient;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class RolesRepositoryAdapter implements RoleRepository {
+public class RolesRepositoryAdapter implements RoleGateway {
 
     private final DatabaseClient client;
     private final RolesReactiveRepository roleRepo;
@@ -23,14 +23,14 @@ public class RolesRepositoryAdapter implements RoleRepository {
     @Override
     public Flux<String> findRoleCodesByUserId(UUID userId) {
         String sql = """
-                  SELECT r.codigo
-                  FROM auth.usuarios_roles ur
+                  SELECT r.code
+                  FROM auth.usuarios_roles ur   
                   JOIN auth.roles r ON r.id_rol = ur.id_rol
                   WHERE ur.id_usuario = :userId
                 """;
         return client.sql(sql)
                 .bind("userId", userId)
-                .map(row -> row.get("codigo", String.class))
+                .map(row -> row.get("code", String.class))
                 .all();
     }
 
@@ -39,7 +39,7 @@ public class RolesRepositoryAdapter implements RoleRepository {
         String deleteSql = "DELETE FROM auth.usuarios_roles WHERE id_usuario = :userId";
         String insertSql = """
                   INSERT INTO auth.usuarios_roles(id_usuario, id_rol)
-                  SELECT :userId, r.id_rol FROM auth.roles r WHERE r.codigo = :code
+                  SELECT :userId, r.id_rol FROM auth.roles r WHERE r.code = :code
                 """;
         return client.sql(deleteSql).bind("userId", userId).then()
                 .thenMany(Flux.fromIterable(roleCodes)

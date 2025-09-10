@@ -3,7 +3,7 @@ package co.com.pragma.crediya.usecase.user;
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.model.user.exception.RoleNotExistsException;
 import co.com.pragma.crediya.model.user.exception.UserNotExistsException;
-import co.com.pragma.crediya.model.user.gateways.RoleRepository;
+import co.com.pragma.crediya.model.user.gateways.RoleGateway;
 import co.com.pragma.crediya.model.user.gateways.UserRepository;
 import co.com.pragma.crediya.model.user.helper.UserValidator;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Set;
 public class UserUseCase {
 
     private final UserRepository userRepositoryGateway;
-    private final RoleRepository roleRepositoryGateway;
+    private final RoleGateway roleRepositoryGateway;
 
     public Mono<User> saveUser(User user) {
 

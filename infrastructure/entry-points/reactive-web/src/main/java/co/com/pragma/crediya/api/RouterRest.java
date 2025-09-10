@@ -16,7 +16,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @Configuration
 public class RouterRest {
 
-    public static final String BASE_URL = "/api/v1/usuarios";
+    public static final String BASE_URL = "/api/v1/usuarios/registrar";
 
     @RouterOperations({
             @RouterOperation(

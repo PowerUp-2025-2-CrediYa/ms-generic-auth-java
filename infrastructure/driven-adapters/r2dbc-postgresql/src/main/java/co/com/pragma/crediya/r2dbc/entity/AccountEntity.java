@@ -1,29 +1,31 @@
 package co.com.pragma.crediya.r2dbc.entity;
 
+
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "roles", schema = "auth")
+import java.util.UUID;
+
+@Table(name = "accounts", schema = "auth")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class RoleEntity {
+public class AccountEntity {
 
     @Id
-    @Column("id_rol")
-    private Integer id;
+    private UUID id;
 
-    @Column("code")
-    private String code;
+    @Column("profile_id")
+    private UUID profileId;
 
-    @Column("display_name")
-    private String name;
+    @Column("username")
+    private String username;
 
-    @Column("descripcion")
-    private String description;
+    @Column("hashed_password")
+    private String hashedPassword;
 
 }
